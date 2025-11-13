@@ -11,17 +11,36 @@ const options = {
 
 export const getMediaList = async (req, res) => {
   const { media_type, page, list_type } = req.params;
-  const respose = await fetch(
+  const response = await fetch(
     `https://api.themoviedb.org/3/${media_type}/${list_type}?language=en-US&page=${page}`,
     options
   );
 
-  if (respose.success === false || !respose) {
-    console.log(respose);
+  if (response.success === false || !response) {
+    console.log(response);
     throw new ApiError(500, "Failed to fetch media-list from data provider");
   }
 
-  const data = await respose.json();
+  const data = await response.json();
+  // console.log(data);
+
+  return res.status(200).json(new ApiResponse(200, "Success", data));
+};
+
+export const getMediaDetails = async (req, res) => {
+  const { media_type, id } = req.params;
+  // console.log(media_type, id);
+
+  const response = await fetch(
+    `https://api.themoviedb.org/3/${media_type}/${id}?language=en-US`,
+    options
+  );
+  if (response.success === false || !response) {
+    console.log(response);
+    throw new ApiError(500, "Failed to fetch media-list from data provider");
+  }
+
+  const data = await response.json();
   // console.log(data);
 
   return res.status(200).json(new ApiResponse(200, "Success", data));
