@@ -89,3 +89,34 @@ export const getSearchResults = async (req, res) => {
 
   return res.status(200).json(new ApiResponse(200, "Success", data));
 };
+
+export const getMediaContent = async (req, res) => {
+  const { media_type, id, content_type } = req.params;
+  //content_type: videos/images/recommendations
+
+  const response = await fetch(
+    `https://api.themoviedb.org/3/${media_type}/${id}/${content_type}`,
+    options
+  );
+  //id for superman 1061474
+
+  if (!response.ok) {
+    const errData = await response.json();
+
+    throw new ApiError(
+      response.status,
+      errData.status_message || "Failed to fetch media content from TMDB"
+    );
+  }
+
+  const data = await response.json();
+
+  if (data.success === false) {
+    throw new ApiError(
+      data.status_code || 500,
+      data.status_message || "TMDB returned an error"
+    );
+  }
+
+  return res.status(200).json(new ApiResponse(200, "Success", data));
+};
