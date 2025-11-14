@@ -64,3 +64,28 @@ export const getMediaCredits = async (req, res) => {
 
   return res.status(200).json(new ApiResponse(200, "Success", data));
 };
+
+export const getSearchResults = async (req, res) => {
+  const { query_type, query, page } = req.params;
+
+  if (!(query_type && query && page)) {
+    throw new ApiError(400, "All field are required");
+  }
+
+  const response = await fetch(
+    `https://api.themoviedb.org/3/search/${query_type}?query=${query}&page=${page}`,
+    options
+  );
+
+  if (!response || response.success === false) {
+    console.log(response);
+    throw new ApiError(
+      500,
+      "Failed to fetch search results from data provider"
+    );
+  }
+
+  const data = await response.json();
+
+  return res.status(200).json(new ApiResponse(200, "Success", data));
+};
