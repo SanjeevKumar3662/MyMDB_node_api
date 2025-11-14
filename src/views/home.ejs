@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sanjeev's MDB API</title>
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🎬</text></svg>"
+    />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background: #f9f9f9;
+        color: #333;
+      }
+      h1 {
+        color: #2c3e50;
+      }
+      code {
+        background: #eee;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .section {
+        margin-bottom: 30px;
+      }
+      .endpoint {
+        margin: 6px 0;
+      }
+      a {
+        color: #2980b9;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>🎬 Welcome to Sanjeev's Movie Database API</h1>
+
+    <p>
+      This API provides access to movie and TV data such as lists, details,
+      credits, search results, and media content from TMDB.
+    </p>
+
+    <!-- API ENDPOINTS -->
+    <div class="section">
+      <h2>📌 Available Endpoints</h2>
+
+      <div class="endpoint">
+        <code>/api/v1/media/list/:media_type/:list_type/:page</code>
+      </div>
+      <div class="endpoint">
+        <code>/api/v1/media/details/:media_type/:id</code>
+      </div>
+      <div class="endpoint">
+        <code>/api/v1/media/credits/:media_type/:id</code>
+      </div>
+      <div class="endpoint">
+        <code>/api/v1/media/search/:query_type/:query/:page</code>
+      </div>
+      <div class="endpoint">
+        <code>/api/v1/media/content/:media_type/:id/:content_type</code>
+      </div>
+    </div>
+
+    <!-- MEDIA LIST EXAMPLES -->
+    <div class="section">
+      <h2>📝 Example Media Lists</h2>
+      <ul>
+        <% mediaTypes.forEach(type => { %> <% listTypes.forEach(list => { %> <%
+        pages.forEach(page => { %>
+        <li>
+          <a
+            href="/api/v1/media/list/<%= type %>/<%= list %>/<%= page %>"
+            target="_blank"
+          >
+            <%= type %> <%= list %> — Page <%= page %>
+          </a>
+          →
+          <code>/api/v1/media/list/<%= type %>/<%= list %>/<%= page %></code>
+        </li>
+        <% }) %> <% }) %> <% }) %>
+      </ul>
+    </div>
+
+    <!-- SEARCH EXAMPLES -->
+    <div class="section">
+      <h2>🔍 Example Search</h2>
+      <ul>
+        <% searchExamples.forEach(term => { %>
+        <li>
+          <a
+            href="/api/v1/media/search/movie/<%= encodeURIComponent(term) %>/1"
+            target="_blank"
+          >
+            Search Movie: <%= term %>
+          </a>
+          →
+          <code
+            >/api/v1/media/search/movie/<%= encodeURIComponent(term) %>/1</code
+          >
+        </li>
+
+        <li>
+          <a
+            href="/api/v1/media/search/tv/<%= encodeURIComponent(term) %>/1"
+            target="_blank"
+          >
+            Search TV: <%= term %>
+          </a>
+          →
+          <code>/api/v1/media/search/tv/<%= encodeURIComponent(term) %>/1</code>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <p>
+      <strong>Note:</strong> Replace placeholders like <code>:media_type</code>,
+      <code>:id</code>, <code>:query</code>, and <code>:page</code> with actual
+      values.
+    </p>
+  </body>
+</html>
