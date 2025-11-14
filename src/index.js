@@ -25,98 +25,8 @@ app.use(
   })
 );
 
-// ------------------------------------------------------------------------------------------------------//
-//endpoint
+app.use("/api/v1/media", mediaRouter);
 
-//media lists
-app.use("/api/v1/media-list", mediaRouter);
-
-//media Details
-// app.get("/media_details/:media_type/:id", async (req, res) => {
-//   const { media_type, id } = req.params;
-
-//   // const id = req.params.id;
-//   // const media_type = req.params.media_type;
-//   console.log(media_type, id);
-//   try {
-//     const data = await getMediaDetails(id, media_type, options);
-
-//     if (data.error) {
-//       return res.status(500).json({ error: "Failed to fetch media details" });
-//     }
-
-//     res.json(data);
-//   } catch (error) {
-//     console.error("Error in /media_details route:", error);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// });
-
-// //media Credits
-// app.get("/media_credits/:media_type/:id", async (req, res) => {
-//   const { media_type, id } = req.params;
-
-//   // const id = req.params.id;
-//   // const media_type = req.params.media_type;
-//   console.log(media_type, id);
-//   try {
-//     const data = await getMediaCredits(id, media_type, options);
-
-//     if (data.error) {
-//       return res.status(500).json({ error: "Failed to fetch media credits" });
-//     }
-
-//     res.json(data);
-//   } catch (error) {
-//     console.error("Error in /media_credits route:", error);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// });
-
-// //search fucntion
-// app.get("/search/:query_type/:query/:page", async (req, res) => {
-//   const { query_type, query, page } = req.params;
-
-//   console.log(query_type, query, page);
-//   try {
-//     const data = await getSearchResults(options, query_type, query, page);
-
-//     if (data.error) {
-//       return res.status(500).json({ error: "Failed to fetch search result" });
-//     }
-
-//     res.json(data);
-//   } catch (error) {
-//     console.error("Error in search route:", error);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// });
-
-// //media content like videos
-// app.get("/media_content/:media_type/:id/:content_type", async (req, res) => {
-//   const { media_type, id, content_type } = req.params;
-
-//   console.log(media_type, id, content_type);
-//   try {
-//     const data = await getMediaContent(options, id, media_type, content_type);
-
-//     if (data.error) {
-//       return res.status(500).json({ error: "Failed to fetch media content" });
-//     }
-
-//     res.json(data);
-//   } catch (error) {
-//     console.error("Error in /media_content route:", error);
-//     res.status(500).json({
-//       error: `Server error, while getting media_content of ${media_type}`,
-//     });
-//   }
-// });
-//endpoins
-// ------------------------------------------------------------------------------------------------------//
-
-// ------------------------------------------------------------------------------------------------------//
-//wellcome message/ dummy/test code
 app.get("/", (req, res) => {
   const pages = [1, 2]; // example pages
   const mediaTypes = ["movie", "tv"];
@@ -207,10 +117,6 @@ app.get("/", (req, res) => {
   `);
 });
 
-// dummy/test code
-// ------------------------------------------------------------------------------------------------------//
-
-//linstening
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
