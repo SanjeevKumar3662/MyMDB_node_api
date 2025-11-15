@@ -11,13 +11,7 @@ app.set("views", "./src/views");
 
 app.use(
   cors({
-    origin: [
-      // "http://127.0.0.1:5500",
-      // "https://tmdb-project-react.vercel.app",
-      "https://my-mdb-lemon.vercel.app",
-      "http://localhost:5173",
-      `https://sanjeevsmdb.vercel.app`,
-    ],
+    origin: ["http://localhost:5173", `https://sanjeevsmdb.vercel.app`],
     optionsSuccessStatus: 200,
   })
 );
