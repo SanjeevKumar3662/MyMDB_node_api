@@ -2,7 +2,7 @@ import express from "express";
 
 import cors from "cors";
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 import mediaRouter from "./routes/media.routes.js";
 
@@ -48,5 +48,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
-
-export default app;
