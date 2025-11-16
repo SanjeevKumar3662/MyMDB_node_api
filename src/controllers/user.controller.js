@@ -2,7 +2,21 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 
-// using async handler
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const generateAccessToken = (payload = {}) => {
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+  });
+};
+
+const generateRefreshToken = (payload = {}) => {
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+  });
+};
+
 export const registerUser = async (req, res) => {
   const { username, fullname, email, password } = req.body;
 
@@ -22,4 +36,53 @@ export const registerUser = async (req, res) => {
       username: user.username,
     })
   );
+};
+
+export const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password);
+
+  if (!(username && password)) {
+    throw new ApiError(400, "All fields are requried");
+  }
+
+  const user = await User.findOne({ username }).select("+password");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const isPasswordRight = await bcrypt.compare(password, user.password);
+  console.log(isPasswordRight);
+  if (!isPasswordRight) {
+    throw new ApiError(401, "Wrong password");
+  }
+
+  const payload = { _id: user._id, username: user.username };
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken(payload);
+
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true, // JS can't access cookie
+      secure: false, // cookie only sent over HTTPS
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    })
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true, // JS can't access cookie
+      secure: false, // cookie only sent over HTTPS
+      sameSite: "lax",
+      maxAge: 15 * 24 * 60 * 60 * 1000,
+    })
+    .json(
+      new ApiResponse(200, "User login successful", {
+        _id: user._id,
+        username: user.username,
+      })
+    );
 };
