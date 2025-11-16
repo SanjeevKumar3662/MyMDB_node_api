@@ -2,6 +2,8 @@ import express from "express";
 import "dotenv/config";
 
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
 const app = express();
 
 import mediaRouter from "./routes/media.routes.js";
@@ -12,10 +14,12 @@ app.set("views", "./src/views");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: ["http://localhost:5173", `https://sanjeevsmdb.vercel.app`],
     optionsSuccessStatus: 200,
+    credentials: true,
   })
 );
 
