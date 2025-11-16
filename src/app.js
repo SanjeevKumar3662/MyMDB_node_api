@@ -3,13 +3,15 @@ import "dotenv/config";
 
 import cors from "cors";
 const app = express();
-const port = process.env.PORT || 3000;
 
 import mediaRouter from "./routes/media.routes.js";
+import userRouter from "./routes/user.route.js";
 
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
     origin: ["http://localhost:5173", `https://sanjeevsmdb.vercel.app`],
@@ -18,6 +20,7 @@ app.use(
 );
 
 app.use("/api/v1/media", mediaRouter);
+app.use("/api/v1/user", userRouter);
 
 app.get("/", (req, res) => {
   const pages = [1, 2];
