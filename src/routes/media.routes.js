@@ -5,7 +5,7 @@ import {
   getMediaDetails,
   getMediaList,
   getSearchResults,
-} from "../controllers/media.controllers.js";
+} from "../controllers/media.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
