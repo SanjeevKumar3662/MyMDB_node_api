@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+import { connectDB } from "./db/db.js";
 import mediaRouter from "./routes/media.routes.js";
 import userRouter from "./routes/user.route.js";
 
@@ -46,5 +47,11 @@ app.get("/", (req, res) => {
     searchExamples,
   });
 });
+
+try {
+  await connectDB();
+} catch (error) {
+  console.error(error);
+}
 
 export default app;
