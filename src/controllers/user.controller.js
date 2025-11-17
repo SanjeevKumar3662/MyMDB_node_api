@@ -40,7 +40,6 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password);
 
   if (!(username && password)) {
     throw new ApiError(400, "All fields are requried");
@@ -52,8 +51,8 @@ export const loginUser = async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  const isPasswordRight = await bcrypt.compare(password, user.password);
-  console.log(isPasswordRight);
+  const isPasswordRight = await bcrypt.compare(password, user.password); //this will be a bool
+
   if (!isPasswordRight) {
     throw new ApiError(401, "Wrong password");
   }
@@ -129,4 +128,25 @@ export const refreshAccessToken = async (req, res) => {
         username: user.username,
       })
     );
+};
+
+export const logoutUser = async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  user.refreshToken = null;
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .cookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: process.env.MODE === "PROD",
+      maxAge: 0,
+    })
+    .json(new ApiResponse(200, "User logout successfull"));
 };
