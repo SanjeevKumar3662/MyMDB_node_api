@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   loginUser,
+  logoutUser,
   refreshAccessToken,
   registerUser,
 } from "../controllers/user.controller.js";
@@ -12,6 +13,7 @@ const router = Router();
 
 router.post("/register", asyncHandler(registerUser));
 router.post("/login", asyncHandler(loginUser));
+router.post("/logout", authenticateAccessToken, asyncHandler(logoutUser));
 router.post("/refreshAccessToken", asyncHandler(refreshAccessToken));
 
 router.get("/test", authenticateAccessToken, (req, res) => {
