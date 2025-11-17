@@ -142,7 +142,13 @@ export const logoutUser = async (req, res) => {
 
   return res
     .status(200)
-    .cookie("refreshToken", {
+    .cookie("accessToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: process.env.MODE === "PROD",
+      maxAge: 0,
+    })
+    .cookie("refreshToken", "", {
       httpOnly: true,
       secure: true,
       sameSite: process.env.MODE === "PROD",
