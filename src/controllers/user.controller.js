@@ -86,3 +86,47 @@ export const loginUser = async (req, res) => {
       })
     );
 };
+
+export const refreshAccessToken = async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw new ApiError(401, "Token not received");
+  }
+
+  const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+  if (!payload) {
+    throw new ApiError(401, "Token not valid");
+  }
+
+  const user = await User.findById(payload._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (refreshToken !== user.refreshToken) {
+    throw new ApiError(401, "Expired token");
+  }
+
+  const newAccessToken = generateAccessToken({
+    _id: user._id,
+    username: user.username,
+  });
+
+  return res
+    .status(201)
+    .cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.MODE === "PROD",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    })
+    .json(
+      new ApiResponse(201, "accessToken refreshed", {
+        _id: user._id,
+        username: user.username,
+      })
+    );
+};
