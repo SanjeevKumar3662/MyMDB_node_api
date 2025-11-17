@@ -156,3 +156,17 @@ export const logoutUser = async (req, res) => {
     })
     .json(new ApiResponse(200, "User logout successfull"));
 };
+
+export const authMe = async (req, res) => {
+  const decoded = req.user;
+
+  const user = await User.findById(decoded._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json({ username: user.username, _id: user._id, email: user.email });
+};

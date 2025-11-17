@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  authMe,
   loginUser,
   logoutUser,
   refreshAccessToken,
@@ -15,6 +16,7 @@ router.post("/register", asyncHandler(registerUser));
 router.post("/login", asyncHandler(loginUser));
 router.post("/logout", authenticateAccessToken, asyncHandler(logoutUser));
 router.post("/refreshAccessToken", asyncHandler(refreshAccessToken));
+router.get("/me", authenticateAccessToken, asyncHandler(authMe));
 
 router.get("/test", authenticateAccessToken, (req, res) => {
   // console.log(req.user);
