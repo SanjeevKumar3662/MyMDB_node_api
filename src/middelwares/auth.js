@@ -12,6 +12,9 @@ export const authenticateAccessToken = (req, res, next) => {
     next();
     return;
   } catch (error) {
-    throw new ApiError(401, "Unauthorised request");
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
