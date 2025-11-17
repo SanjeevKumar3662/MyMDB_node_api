@@ -68,13 +68,13 @@ export const loginUser = async (req, res) => {
     .status(200)
     .cookie("accessToken", accessToken, {
       httpOnly: true, // JS can't access cookie
-      secure: false, // cookie only sent over HTTPS
+      secure: process.env.MODE === "PROD", // cookie only sent over HTTPS
       sameSite: "lax",
       maxAge: 15 * 60 * 1000,
     })
     .cookie("refreshToken", refreshToken, {
       httpOnly: true, // JS can't access cookie
-      secure: false, // cookie only sent over HTTPS
+      secure: process.env.MODE === "PROD", // cookie only sent over HTTPS
       sameSite: "lax",
       maxAge: 15 * 24 * 60 * 60 * 1000,
     })
@@ -144,14 +144,14 @@ export const logoutUser = async (req, res) => {
     .status(200)
     .cookie("accessToken", "", {
       httpOnly: true,
-      secure: true,
-      sameSite: process.env.MODE === "PROD",
+      secure: process.env.MODE === "PROD",
+      sameSite: "lax",
       maxAge: 0,
     })
     .cookie("refreshToken", "", {
       httpOnly: true,
-      secure: true,
-      sameSite: process.env.MODE === "PROD",
+      secure: process.env.MODE === "PROD",
+      sameSite: "lax",
       maxAge: 0,
     })
     .json(new ApiResponse(200, "User logout successfull"));
