@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/user.controller.js";
+import {
+  loginUser,
+  refreshAccessToken,
+  registerUser,
+} from "../controllers/user.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 import { authenticateAccessToken } from "../middelwares/auth.js";
@@ -8,6 +12,7 @@ const router = Router();
 
 router.post("/register", asyncHandler(registerUser));
 router.post("/login", asyncHandler(loginUser));
+router.post("/refreshAccessToken", asyncHandler(refreshAccessToken));
 
 router.get("/test", authenticateAccessToken, (req, res) => {
   // console.log(req.user);
