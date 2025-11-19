@@ -3,7 +3,7 @@ export const asyncHandler = (fn) => async (req, res, next) => {
     await fn(req, res, next);
   } catch (error) {
     if (process.env.MODE === "DEV") {
-      console.error(error);
+      console.error(error.message, error);
     } else {
       console.error(error.message);
     }
