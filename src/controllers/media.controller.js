@@ -1,6 +1,8 @@
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 
+import fetch from "node-fetch";
+
 const options = {
   method: "GET",
   headers: {
