@@ -1,3 +1,7 @@
+import dns from "dns";
+if (typeof dns.setDefaultResultOrder === "function") {
+  dns.setDefaultResultOrder("ipv4first");
+}
 import express from "express";
 import "dotenv/config";
 
@@ -9,6 +13,7 @@ const app = express();
 import { connectDB } from "./db/db.js";
 import mediaRouter from "./routes/media.routes.js";
 import userRouter from "./routes/user.route.js";
+import watchlistRotuer from "./routes/watchlist.route.js";
 
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
@@ -26,6 +31,7 @@ app.use(
 
 app.use("/api/v1/media", mediaRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/watchlist", watchlistRotuer);
 
 app.get("/", (req, res) => {
   const pages = [1, 2];
