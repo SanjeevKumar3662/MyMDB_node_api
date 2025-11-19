@@ -5,6 +5,8 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const isProd = process.env.MODE === "PROD";
+
 const generateAccessToken = (payload = {}) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
@@ -68,14 +70,14 @@ export const loginUser = async (req, res) => {
     .status(200)
     .cookie("accessToken", accessToken, {
       httpOnly: true, // JS can't access cookie
-      secure: process.env.MODE === "PROD", // cookie only sent over HTTPS
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     })
     .cookie("refreshToken", refreshToken, {
       httpOnly: true, // JS can't access cookie
-      secure: process.env.MODE === "PROD", // cookie only sent over HTTPS
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 15 * 24 * 60 * 60 * 1000,
     })
     .json(
@@ -118,8 +120,8 @@ export const refreshAccessToken = async (req, res) => {
     .status(201)
     .cookie("accessToken", newAccessToken, {
       httpOnly: true,
-      secure: process.env.MODE === "PROD",
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     })
     .json(
@@ -144,14 +146,14 @@ export const logoutUser = async (req, res) => {
     .status(200)
     .cookie("accessToken", "", {
       httpOnly: true,
-      secure: process.env.MODE === "PROD",
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 0,
     })
     .cookie("refreshToken", "", {
       httpOnly: true,
-      secure: process.env.MODE === "PROD",
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 0,
     })
     .json(new ApiResponse(200, "User logout successfull"));
