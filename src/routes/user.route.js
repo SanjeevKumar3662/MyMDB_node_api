@@ -18,9 +18,11 @@ router.post("/logout", authenticateAccessToken, asyncHandler(logoutUser));
 router.post("/refreshAccessToken", asyncHandler(refreshAccessToken));
 router.get("/me", authenticateAccessToken, asyncHandler(authMe));
 
-router.get("/test", authenticateAccessToken, (req, res) => {
-  // console.log(req.user);
-  return res.status(200).json({ user: req.user });
+router.get("/ping", async (req, res) => {
+  // was using this sample code to simulate a delay (just like render)
+  // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  // await delay(10000);
+  return res.status(200).json({ message: "Success" });
 });
 
 export default router;
