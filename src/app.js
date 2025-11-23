@@ -23,7 +23,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", `https://sanjeevsmdb.vercel.app`],
+    origin: [
+      "http://localhost:5173",
+      `https://sanjeevsmdb.vercel.app`,
+      "https://mdb.sanjeevkumar.site",
+    ],
     optionsSuccessStatus: 200,
     credentials: true,
   })
