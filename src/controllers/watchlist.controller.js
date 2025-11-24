@@ -3,14 +3,14 @@ import { ObjectId } from "mongodb";
 import { Media } from "../models/media.js";
 import { Watchlist } from "../models/watchlist.model.js";
 import { fetchTMDBMedia } from "../utils/tmdb.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 
-// 🔹 Add to watchlist
 export const addToWatchlist = async (req, res) => {
   try {
     const { tmdbId, type, status, progress, score } = req.body;
     const userId = req.user._id;
 
-    // Check if media already exists
+    // check if media already exists
     let media = await Media.findOne({ tmdbId });
 
     if (!media) {
@@ -18,7 +18,7 @@ export const addToWatchlist = async (req, res) => {
       media = await Media.create(meta);
     }
 
-    // Check if this media is already in user's list
+    // check if this media is already in user's list
     let existing = await Watchlist.findOne({ userId, mediaId: media._id });
     if (existing) {
       return res.status(400).json({ message: "Already in your list." });
@@ -39,7 +39,7 @@ export const addToWatchlist = async (req, res) => {
   }
 };
 
-// 🔹 Get all entries for a category (watching, completed, etc.)
+// get data for one type of watchlist like watching or on hold etc.
 export const getWatchlist = async (req, res) => {
   try {
     const { status } = req.query;
@@ -49,7 +49,7 @@ export const getWatchlist = async (req, res) => {
       .populate("mediaId")
       .sort({ createdAt: -1 });
 
-    // Format media object properly
+    // formating media entry properly
     const formatted = items.map((entry) => ({
       _id: entry._id,
       status: entry.status,
@@ -72,7 +72,6 @@ export const getWatchlist = async (req, res) => {
   }
 };
 
-// 🔹 Update entry (score, progress, notes, tags, status)
 export const updateWatchlistEntry = async (req, res) => {
   try {
     const { id } = req.params;
@@ -91,7 +90,6 @@ export const updateWatchlistEntry = async (req, res) => {
   }
 };
 
-// 🔹 Delete entry
 export const deleteWatchlistEntry = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -104,8 +102,6 @@ export const deleteWatchlistEntry = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-// 🔹 Stats for tabs (counts)
 
 export const getWatchlistStats = async (req, res) => {
   try {
@@ -123,4 +119,41 @@ export const getWatchlistStats = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+export const getEntryStatus = async (req, res) => {
+  const { id } = req.params;
+
+  const media = await Media.findOne({ tmdbId: id });
+
+  // If media is not in DB at all
+  if (!media) {
+    return res.status(200).json(
+      new ApiResponse(200, "Not in watchlist", {
+        exists: false,
+        _id: null,
+        status: null,
+      })
+    );
+  }
+
+  const entry = await Watchlist.findOne({ mediaId: media._id });
+
+  if (!entry) {
+    return res.status(200).json(
+      new ApiResponse(200, "Not in watchlist", {
+        exists: false,
+        _id: null,
+        status: null,
+      })
+    );
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, "Success", {
+      exists: true,
+      _id: entry._id,
+      status: entry.status,
+    })
+  );
 };
