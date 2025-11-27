@@ -81,7 +81,7 @@ export const updateWatchlistEntry = async (req, res) => {
     const entry = await Watchlist.findOneAndUpdate(
       { _id: id, userId },
       updates,
-      { new: true }
+      { new: true },
     );
 
     res.json({ message: "Updated", entry });
@@ -123,6 +123,7 @@ export const getWatchlistStats = async (req, res) => {
 
 export const getEntryStatus = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   const media = await Media.findOne({ tmdbId: id });
 
@@ -133,11 +134,11 @@ export const getEntryStatus = async (req, res) => {
         exists: false,
         _id: null,
         status: null,
-      })
+      }),
     );
   }
 
-  const entry = await Watchlist.findOne({ mediaId: media._id });
+  const entry = await Watchlist.findOne({ userId, mediaId: media._id });
 
   if (!entry) {
     return res.status(200).json(
@@ -145,7 +146,7 @@ export const getEntryStatus = async (req, res) => {
         exists: false,
         _id: null,
         status: null,
-      })
+      }),
     );
   }
 
@@ -154,6 +155,6 @@ export const getEntryStatus = async (req, res) => {
       exists: true,
       _id: entry._id,
       status: entry.status,
-    })
+    }),
   );
 };
