@@ -14,6 +14,7 @@ import { connectDB } from "./db/db.js";
 import mediaRouter from "./routes/media.routes.js";
 import userRouter from "./routes/user.route.js";
 import watchlistRotuer from "./routes/watchlist.route.js";
+import commentRouter from "./routes/comment.routes.js";
 
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
@@ -36,6 +37,7 @@ app.use(
 app.use("/api/v1/media", mediaRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/watchlist", watchlistRotuer);
+app.use("/api/v1/comment", commentRouter);
 
 app.get("/", (req, res) => {
   const pages = [1, 2];
