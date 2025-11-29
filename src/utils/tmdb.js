@@ -3,7 +3,7 @@ export async function fetchTMDBMedia(tmdbId, type) {
 
   const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${process.env.API_KEY}`, // <-- IMPORTANT
+      Authorization: `Bearer ${process.env.API_KEY}`,
       accept: "application/json",
     },
   });
