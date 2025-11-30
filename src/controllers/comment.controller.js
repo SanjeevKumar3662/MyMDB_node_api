@@ -29,7 +29,7 @@ export const addCommentToMedia = async (req, res) => {
     const meta = await fetchTMDBMedia(tmdbId, type);
     media = await Media.create(meta);
   }
-  console.log("media", media);
+  // console.log("media", media);
 
   const userComment = await Comment.create({
     userId,
@@ -48,3 +48,33 @@ export const addCommentToMedia = async (req, res) => {
     .status(200)
     .json(new ApiResponse(201, "Comment created", userComment));
 };
+
+export const getMediaComments = async (req, res) => {
+  const { tmdbId, type } = req.body;
+
+  if (!(tmdbId && type)) {
+    throw ApiError(400, "Both tmdbId and type are required");
+  }
+
+  let media = await Media.findOne({ tmdbId });
+
+  if (!media) {
+    const meta = await fetchTMDBMedia(tmdbId, type);
+    media = await Media.create(meta);
+  }
+
+  const comments = await Comment.find({ mediaId: media._id });
+  // console.log("comments", comments);
+
+  if (!comments) {
+    throw ApiError(500, "Faild to get comments / try again later");
+  }
+
+  // don't send the whole comments object in response
+  return res.status(200).json(new ApiResponse(200, "success", comments));
+};
+
+// export const deleteMediaComment = async(req,res) =>{
+//   const user = req.user;
+//   const {commentId} = req.body;
+// }
