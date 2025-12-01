@@ -37,7 +37,7 @@ export const addCommentToMedia = async (req, res) => {
     parentId,
     comment,
   });
-  console.log("new comment ", userComment);
+  // console.log("new comment ", userComment);
 
   if (!userComment) {
     throw new ApiError(500, "Could not create a comment / Try again");
@@ -51,7 +51,7 @@ export const addCommentToMedia = async (req, res) => {
 
 export const getMediaComments = async (req, res) => {
   const { tmdbId, type } = req.query;
-  console.log(tmdbId, type);
+  // console.log(tmdbId, type);
 
   if (!(tmdbId && type)) {
     throw new ApiError(400, "Both tmdbId and type are required");
