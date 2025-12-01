@@ -10,7 +10,7 @@ export const addCommentToMedia = async (req, res) => {
   const { tmdbId, parentId = null, comment, type } = req.body;
 
   if (!(tmdbId && comment && type)) {
-    throw ApiError(
+    throw new ApiError(
       400,
       "All query params including tmdbId, type and comment are required"
     );
@@ -19,7 +19,7 @@ export const addCommentToMedia = async (req, res) => {
   const isParentIdValid = Comment.findById(parentId);
   // console.log("isParentIdValid", isParentIdValid);
   if (!isParentIdValid) {
-    throw ApiError(400, "Invalid parentId provided");
+    throw new ApiError(400, "Invalid parentId provided");
   }
 
   // check if media already exists
@@ -40,7 +40,7 @@ export const addCommentToMedia = async (req, res) => {
   console.log("new comment ", userComment);
 
   if (!userComment) {
-    throw ApiError(500, "Could not create a comment / Try again");
+    throw new ApiError(500, "Could not create a comment / Try again");
   }
 
   // don't send the whole userComment
@@ -50,10 +50,11 @@ export const addCommentToMedia = async (req, res) => {
 };
 
 export const getMediaComments = async (req, res) => {
-  const { tmdbId, type } = req.body;
+  const { tmdbId, type } = req.query;
+  console.log(tmdbId, type);
 
   if (!(tmdbId && type)) {
-    throw ApiError(400, "Both tmdbId and type are required");
+    throw new ApiError(400, "Both tmdbId and type are required");
   }
 
   let media = await Media.findOne({ tmdbId });
@@ -67,7 +68,7 @@ export const getMediaComments = async (req, res) => {
   // console.log("comments", comments);
 
   if (!comments) {
-    throw ApiError(500, "Faild to get comments / try again later");
+    throw new ApiError(500, "Faild to get comments / try again later");
   }
 
   // don't send the whole comments object in response
