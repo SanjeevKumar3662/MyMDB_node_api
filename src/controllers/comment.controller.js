@@ -36,12 +36,12 @@ export const addCommentToMedia = async (req, res) => {
     mediaId: media._id,
     parentId,
     comment,
-  });
-  // console.log("new comment ", userComment);
+  }).populate("userId", "username");
 
   if (!userComment) {
     throw new ApiError(500, "Could not create a comment / Try again");
   }
+  // console.log("new comment ", userComment);
 
   // don't send the whole userComment
   return res
@@ -64,7 +64,10 @@ export const getMediaComments = async (req, res) => {
     media = await Media.create(meta);
   }
 
-  const comments = await Comment.find({ mediaId: media._id });
+  const comments = await Comment.find({ mediaId: media._id }).populate(
+    "userId",
+    "username"
+  );
   // console.log("comments", comments);
 
   if (!comments) {
