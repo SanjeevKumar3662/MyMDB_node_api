@@ -81,7 +81,7 @@ export const updateWatchlistEntry = async (req, res) => {
     const entry = await Watchlist.findOneAndUpdate(
       { _id: id, userId },
       updates,
-      { new: true },
+      { new: true }
     );
 
     res.json({ message: "Updated", entry });
@@ -134,7 +134,7 @@ export const getEntryStatus = async (req, res) => {
         exists: false,
         _id: null,
         status: null,
-      }),
+      })
     );
   }
 
@@ -146,15 +146,15 @@ export const getEntryStatus = async (req, res) => {
         exists: false,
         _id: null,
         status: null,
-      }),
+      })
     );
   }
+  console.log(entry);
 
   return res.status(200).json(
     new ApiResponse(200, "Success", {
       exists: true,
-      _id: entry._id,
-      status: entry.status,
-    }),
+      entry,
+    })
   );
 };
