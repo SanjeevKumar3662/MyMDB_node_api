@@ -31,12 +31,13 @@ export const addCommentToMedia = async (req, res) => {
   }
   // console.log("media", media);
 
-  const userComment = await Comment.create({
+  let userComment = await Comment.create({
     userId,
     mediaId: media._id,
     parentId,
     comment,
-  }).populate("userId", "username");
+  });
+  userComment = await userComment.populate("userId", "username");
 
   if (!userComment) {
     throw new ApiError(500, "Could not create a comment / Try again");
@@ -78,7 +79,28 @@ export const getMediaComments = async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "success", comments));
 };
 
-// export const deleteMediaComment = async(req,res) =>{
-//   const user = req.user;
-//   const {commentId} = req.body;
-// }
+export const deleteMediaComment = async (req, res) => {
+  const user = req.user;
+  const { commentId } = req.body;
+
+  const comment = await Comment.findOne({ _id: commentId });
+
+  if (!comment) {
+    throw new ApiError(400, "Invlid comment Id");
+  }
+
+  if (user._id !== comment.userId.toString()) {
+    throw new ApiError(401, "This comment id not belong to the user");
+  }
+
+  const deletedComment = await Comment.deleteOne({ _id: commentId });
+  // console.log("deletedComment", deletedComment);
+
+  if (deletedComment.deletedCount !== 1) {
+    throw new ApiError(500, "Failed to deleted comment / try again later");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "deleted", deleteMediaComment));
+};
