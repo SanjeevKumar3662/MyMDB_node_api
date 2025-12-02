@@ -149,7 +149,7 @@ export const getEntryStatus = async (req, res) => {
       })
     );
   }
-  console.log(entry);
+  // console.log(entry);
 
   return res.status(200).json(
     new ApiResponse(200, "Success", {
