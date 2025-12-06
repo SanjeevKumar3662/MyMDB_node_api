@@ -1,8 +1,8 @@
-# 🎬 Sanjeev's Movie Database API
+# Sanjeev's Movie Database API
 
 A RESTful API built with **Node.js** and **Express.js** that provides access to movie and TV data using **The Movie Database (TMDB)**. This API allows fetching media lists, details, credits, search results, and media content like videos.
 
-## 🌟 Features
+## Features
 
 - Fetch **movie & TV lists** (popular, top-rated, upcoming, now playing, airing today)
 - Get **media details** and **credits**
@@ -11,13 +11,13 @@ A RESTful API built with **Node.js** and **Express.js** that provides access to 
 - CORS-enabled backend for secure frontend access
 - All endpoints return JSON
 
-## 🔗 Live Example
+## Live Example
 
 Visit the API intro page in your browser:  
 [Live Link: Here](https://first-backend-eight.vercel.app/)  
 It provides clickable examples for testing all endpoints.
 
-## 📌 API Endpoints & Examples
+## API Endpoints & Examples
 
 **1. Media Lists**  
 Get lists of movies or TV shows:
@@ -94,21 +94,21 @@ Examples:
 
 > Replace placeholders like `:media_type`, `:id`, `:query`, and `:page` with actual values.
 
-## ⚡ Tech Stack
+## Tech Stack
 
 - Node.js
 - Express.js
 - TMDB API
 - CORS
 
-## 🔧 Notes
+## Notes
 
 - CORS is enabled for selected origins; update as needed for your frontend.
 - Errors from TMDB API are propagated with meaningful messages.
 - All endpoints return JSON.
 
-## 🔗 License
+## License
 
 MIT License © Sanjeev Kumar
 
-Made with ❤️ by Sanjeev Kumar
+Made by Sanjeev Kumar
