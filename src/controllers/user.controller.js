@@ -6,17 +6,25 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const isProd = process.env.MODE === "PROD";
+const JWT_ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || "";
+const JWT_REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || "";
+
+const JWT_ACCESS_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY || "15m";
+const JWT_REFRESH_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || "15d";
 
 const generateAccessToken = (payload = {}) => {
-  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-  });
+  const options = {
+    expiresIn: JWT_ACCESS_EXPIRY,
+  };
+  return jwt.sign(payload, JWT_ACCESS_SECRET, options);
 };
 
 const generateRefreshToken = (payload = {}) => {
-  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-  });
+  const options = {
+    expiresIn: JWT_REFRESH_EXPIRY,
+  };
+
+  return jwt.sign(payload, JWT_REFRESH_SECRET, options);
 };
 
 export const registerUser = async (req, res) => {
@@ -95,7 +103,7 @@ export const refreshAccessToken = async (req, res) => {
     throw new ApiError(401, "Token not received");
   }
 
-  const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
 
   if (!payload) {
     throw new ApiError(401, "Token not valid");
