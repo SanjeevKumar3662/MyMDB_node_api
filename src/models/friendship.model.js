@@ -5,10 +5,12 @@ const friendshipSchema = new mongoose.Schema(
     userA: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     userB: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     status: {
       type: String,
@@ -18,6 +20,7 @@ const friendshipSchema = new mongoose.Schema(
     requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
