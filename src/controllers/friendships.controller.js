@@ -31,3 +31,24 @@ export const sendFriendRequest = async (req, res) => {
 
   return res.status(201).json(new ApiResponse(201, "Friend added", newFriend));
 };
+
+export const getAllFriends = async (req, res) => {
+  const user = req.user;
+
+  const allFriends = await Friendship.find({
+    status: "accepted",
+    $or: [{ userA: user._id }, { userB: user._id }],
+  })
+    .populate("userA", "username fullname")
+    .populate("userB", "username fullname");
+
+  if (!allFriends) {
+    throw new ApiError(500, "Failed to get all friends");
+  }
+
+  console.log("allFriends", allFriends);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Fetched all friends", allFriends));
+};
